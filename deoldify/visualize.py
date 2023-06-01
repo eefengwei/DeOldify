@@ -180,6 +180,20 @@ class ModelImageVisualizer:
 
         return filtered_image
 
+    def get_filtered_image(
+        self, orig_image: Image, render_factor: int = None, post_process: bool = True,
+        watermarked: bool = True,
+    ) -> Image:
+        self._clean_mem()
+        filtered_image = self.filter.filter(
+            orig_image, orig_image, render_factor=render_factor,post_process=post_process
+        )
+
+        if watermarked:
+            return get_watermarked(filtered_image)
+
+        return filtered_image
+
     def _plot_image(
         self,
         image: Image,
@@ -300,6 +314,19 @@ class VideoColorizer:
                     str(img_path), render_factor=render_factor, post_process=post_process,watermarked=watermarked
                 )
                 color_image.save(str(colorframes_folder / img))
+
+    def colorize_single_frame_from_file(self, src_path, dst_path):
+        if os.path.isfile(str(src_path)):
+            color_image = self.vis.get_transformed_image(str(src_path))
+
+        if dst_path:
+            color_image.save(dst_path)
+
+    def colorize_single_frame_from_image(self, src_img):
+        color_image = None
+        if src_img:
+            color_image = self.vis.get_filtered_image(src_img)
+        return color_image
 
     def _build_video(self, source_path: Path) -> Path:
         colorized_path = self.result_folder / (
