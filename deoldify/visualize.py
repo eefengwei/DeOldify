@@ -317,7 +317,7 @@ class VideoColorizer:
 
     def colorize_single_frame_from_file(self, src_path, dst_path):
         if os.path.isfile(str(src_path)):
-            color_image = self.vis.get_transformed_image(str(src_path))
+            color_image = self.vis.get_transformed_image(str(src_path),post_process=False, watermarked=False)
 
         if dst_path:
             color_image.save(dst_path)
@@ -325,7 +325,7 @@ class VideoColorizer:
     def colorize_single_frame_from_image(self, src_img):
         color_image = None
         if src_img:
-            color_image = self.vis.get_filtered_image(src_img)
+            color_image = self.vis.get_filtered_image(src_img, post_process=False, watermarked=False)
         return color_image
 
     def _build_video(self, source_path: Path) -> Path:
